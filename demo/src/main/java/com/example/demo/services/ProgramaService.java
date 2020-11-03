@@ -3,15 +3,12 @@ package com.example.demo.services;
 import com.example.demo.dto.AlunoDto;
 import com.example.demo.dto.ProgramaDto;
 import com.example.demo.model.Aluno;
-import com.example.demo.model.Mentor;
 import com.example.demo.model.Programa;
 import com.example.demo.repository.AlunoRepository;
 import com.example.demo.repository.ProgramaRepository;
 import com.example.demo.services.exception.DatabaseException;
 import com.example.demo.services.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

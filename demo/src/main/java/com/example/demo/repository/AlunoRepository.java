@@ -30,7 +30,7 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long>{
             nativeQuery = true)
     Aluno findOneActiveAlunosById(Long id);
 
-    @Query(value = "SELECT * FROM tb_aluno tba WHERE tba.id = ?1 AND tba.active = true AND tba.mentor_id = ?2 AND",
+    @Query(value = "SELECT * FROM tb_aluno tba WHERE tba.id = ?1 AND tba.active = true AND tba.mentor_id = ?2",
     nativeQuery = true)
     Aluno verifyRelation(Long aluno_id, Long mentor_id);
 }

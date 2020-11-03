@@ -98,13 +98,14 @@ public class AlunoService {
             Aluno entity = repository.getOne(id);
             if(entity.getActive()){
                 entity.setActive(false);
+                entity.setMentor(null);
                 repository.save(entity);
             }else{
                 throw new ResourceNotFoundException("This enity doesn't exist");
             }
 
         }catch (EntityNotFoundException e){
-            throw new ResourceNotFoundException("Cannot find entity with id:" + id +", to delete");
+            throw new ResourceNotFoundException("Cannot find this entity, to delete");
         }
     }
 

@@ -2,6 +2,8 @@ package com.example.demo.services;
 
 import com.example.demo.dto.MateriaDto;
 import com.example.demo.model.Materia;
+import com.example.demo.model.Mentor;
+import com.example.demo.repository.AvaliacaoRepository;
 import com.example.demo.repository.MateriaRepository;
 import com.example.demo.services.exception.DatabaseException;
 import com.example.demo.services.exception.ResourceNotFoundException;
@@ -21,6 +23,9 @@ public class MateriaService {
 
     @Autowired
     private MateriaRepository repository;
+
+    @Autowired
+    AvaliacaoRepository avaliacaoRepository;
 
     @Transactional(readOnly = true)
     public List<MateriaDto> listAll(){
@@ -43,7 +48,9 @@ public class MateriaService {
 
     @Transactional
     public MateriaDto create(MateriaDto dto){
-        Materia entity = new Materia(dto.getName());
+        Materia entity = new Materia();
+        entity.setName(dto.getName());
+        entity.setActive(true);
         entity = repository.save(entity);
         return new MateriaDto(entity);
     }
@@ -61,12 +68,16 @@ public class MateriaService {
     }
 
     public void deleteById(Long id){
-        try{
-            repository.deleteById(id);
-        }catch(EmptyResultDataAccessException e){
-            throw new ResourceNotFoundException("Entity not Found");
-        }catch(DataIntegrityViolationException e){
-            throw new DatabaseException("This Entity cannot be deleted");
+        Materia entity = repository.getOne(id);
+        if(avaliacaoRepository.findAllAvaliacaoByMateriaId(id).isEmpty()){
+            if(entity.getActive()){
+                entity.setActive(false);
+                repository.save(entity);
+            }else{
+                throw  new ResourceNotFoundException("Entity not Found");
+            }
+        }else{
+            throw new DatabaseException("This entity cannot be deleted");
         }
     }
 

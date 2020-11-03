@@ -25,10 +25,11 @@ public class MentorService {
     @Autowired
     private AlunoRepository alunoRepository;
 
+//    alunoRepository.findSetAllActiveAlunosByMentorId(x.getId())
     @Transactional(readOnly = true)
     public List<MentorDto> listAll(){
         List<Mentor> list = repository.findAllActive();
-        return list.stream().map(x -> new MentorDto(x,alunoRepository.findSetAllActiveAlunosByMentorId(x.getId()))).collect(Collectors.toList());
+        return list.stream().map(x -> new MentorDto(x, x.getAlunos())).collect(Collectors.toList());
     }
 
     @Transactional

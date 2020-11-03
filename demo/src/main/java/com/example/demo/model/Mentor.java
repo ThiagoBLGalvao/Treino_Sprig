@@ -27,6 +27,20 @@ public class Mentor implements Serializable {
     public Mentor() {
     }
 
+    public Mentor(String name){
+      this.name = name;
+    }
+
+    public Mentor(String name, Boolean active){
+        this.name = name;
+        this.active = active;
+    }
+
+    public Mentor(Long id,String name){
+        this.id = id;
+        this.name = name;
+    }
+
     public Mentor(String name, Set<Aluno> alunos) {
         this.name = name;
         this.alunos = alunos;

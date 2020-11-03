@@ -3,6 +3,7 @@ package com.example.demo.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -14,6 +15,7 @@ public class Materia implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private Boolean active;
 
     @OneToMany(mappedBy = "materia")
     private Set<Avaliacao> avaliacoes = new HashSet<>();
@@ -44,5 +46,26 @@ public class Materia implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Materia materia = (Materia) o;
+        return Objects.equals(id, materia.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

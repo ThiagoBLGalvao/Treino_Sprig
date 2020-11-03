@@ -15,6 +15,7 @@ public class Avaliacao implements Serializable {
     private Long id;
     private Double nota;
     private Month mes;
+    private Boolean active;
 
     @ManyToOne
     @JoinColumn(name = "mentor_id")
@@ -77,6 +78,14 @@ public class Avaliacao implements Serializable {
 
     public void setMateria(Materia materia) {
         this.materia = materia;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     @Override

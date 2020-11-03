@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.dto.AvaliacaoDto;
+import com.example.demo.model.Aluno;
 import com.example.demo.model.Avaliacao;
 import com.example.demo.repository.AvaliacaoRepository;
 import com.example.demo.services.exception.DatabaseException;
@@ -48,6 +49,7 @@ public class AvaliacaoService {
         try{
             if(alunoService.verifyRelation(dto.getAluno_id(), dto.getMentor_id())){
                 copyToEntity(entity, dto);
+                entity.setActive(true);
                 entity = repository.save(entity);
                 return new AvaliacaoDto(entity);
             }else{
@@ -55,6 +57,23 @@ public class AvaliacaoService {
             }
         }catch (EntityNotFoundException e){
             throw new ResourceNotFoundException("Some Entity Not Found");
+        }
+    }
+
+    @Transactional
+    public void deleteAvaliacao(Long id){
+        try {
+            Avaliacao entity = repository.getOne(id);
+            if(entity.getActive()){
+                entity.setActive(false);
+                entity.setMentor(null);
+                repository.save(entity);
+            }else{
+                throw new ResourceNotFoundException("This enity doesn't exist");
+            }
+
+        }catch (EntityNotFoundException e){
+            throw new ResourceNotFoundException("Cannot find this entity, to delete");
         }
     }
 
