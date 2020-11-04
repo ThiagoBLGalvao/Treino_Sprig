@@ -81,13 +81,10 @@ public class AlunoServiceTest {
         List<AlunoDto> dto = alunoService.listAllAlunos();
         Assertions.assertEquals("Dio",dto.get(0).getName());
         Assertions.assertEquals("Jhonny", dto.get(1).getName());
-
     }
 
     @Test
     public void createAlunoTest(){
-        var id = 1l;
-
         AlunoDto alunoDto = new AlunoDto("Jonathan","Dio");
         alunoDto.setMentor_id(1L);
         alunoDto.setPrograma_id(1L);

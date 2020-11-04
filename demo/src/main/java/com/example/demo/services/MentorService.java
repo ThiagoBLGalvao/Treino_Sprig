@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.dto.AlunoDto;
 import com.example.demo.dto.MentorDto;
+import com.example.demo.mappers.MentorMentorDtoMapperImpl;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Mentor;
 import com.example.demo.repository.AlunoRepository;
@@ -25,6 +26,9 @@ public class MentorService {
     @Autowired
     private AlunoRepository alunoRepository;
 
+    @Autowired
+    MentorMentorDtoMapperImpl mapper;
+
 //    alunoRepository.findSetAllActiveAlunosByMentorId(x.getId())
     @Transactional(readOnly = true)
     public List<MentorDto> listAll(){
@@ -46,8 +50,8 @@ public class MentorService {
 
     @Transactional
     public MentorDto createMentor(MentorDto dto){
-        Mentor entity = new Mentor();
-        copyToEntity(dto, entity);
+        Mentor entity = mapper.dtoToEntity(dto);
+
         entity.setActive(true);
 
         entity = repository.save(entity);
