@@ -1,18 +1,18 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.MateriaDto;
-import com.example.demo.dto.MentorDto;
+import com.example.demo.mappers.MateriaMapper;
 import com.example.demo.model.Materia;
-import com.example.demo.model.Mentor;
 import com.example.demo.repository.AvaliacaoRepository;
 import com.example.demo.repository.MateriaRepository;
 import com.example.demo.services.MateriaService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -31,6 +31,9 @@ public class MateriaServiceTest {
 
     @Mock
     private AvaliacaoRepository avaliacaoRepository;
+
+    @Spy
+    MateriaMapper mapper = Mappers.getMapper(MateriaMapper.class);
 
     @Test
     public void listAllMateriaTest(){

@@ -1,14 +1,17 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ProgramaDto;
+import com.example.demo.mappers.ProgramaMapper;
 import com.example.demo.model.Programa;
 import com.example.demo.repository.AlunoRepository;
 import com.example.demo.repository.ProgramaRepository;
 import com.example.demo.services.ProgramaService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -28,6 +31,9 @@ public class ProgramaServiceTest {
 
     @Mock
     AlunoRepository alunoRepository;
+
+    @Spy
+    ProgramaMapper mapper = Mappers.getMapper(ProgramaMapper.class);
 
     @Test
     public void listAllProgramaTest(){

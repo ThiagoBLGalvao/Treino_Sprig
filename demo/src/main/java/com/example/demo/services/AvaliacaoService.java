@@ -1,7 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.dto.AvaliacaoDto;
-import com.example.demo.model.Aluno;
+import com.example.demo.mappers.AvaliacaoMapper;
 import com.example.demo.model.Avaliacao;
 import com.example.demo.repository.AvaliacaoRepository;
 import com.example.demo.services.exception.DatabaseException;
@@ -29,18 +29,21 @@ public class AvaliacaoService {
     @Autowired
     private MateriaService materiaService;
 
+    @Autowired
+    AvaliacaoMapper mapper;
+
 
     @Transactional(readOnly = true)
     public List<AvaliacaoDto> getAll(){
         List<Avaliacao> list = repository.findAll();
-        return list.stream().map(AvaliacaoDto::new).collect(Collectors.toList());
+        return list.stream().map(mapper::avaliacaoToAvaliacaoDto).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public AvaliacaoDto getById(Long id){
         Optional<Avaliacao> obj = repository.findById(id);
         Avaliacao entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity Not Found"));
-        return new AvaliacaoDto(entity);
+        return mapper.avaliacaoToAvaliacaoDto(entity);
     }
 
     @Transactional
@@ -51,7 +54,7 @@ public class AvaliacaoService {
                 copyToEntity(entity, dto);
                 entity.setActive(true);
                 entity = repository.save(entity);
-                return new AvaliacaoDto(entity);
+                return mapper.avaliacaoToAvaliacaoDto(entity);
             }else{
                 throw new DatabaseException("This Mentor cannot rate this Aluno");
             }

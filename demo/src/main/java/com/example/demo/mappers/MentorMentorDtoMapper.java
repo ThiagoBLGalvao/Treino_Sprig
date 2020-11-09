@@ -9,7 +9,7 @@ import org.mapstruct.Mappings;
 
 import java.util.Set;
 
-@Mapper
+@Mapper(componentModel = "spring", uses = {AlunoMapper.class})
 public interface MentorMentorDtoMapper {
     MentorDto entityToDto(Mentor entity);
 

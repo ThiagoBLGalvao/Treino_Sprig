@@ -18,20 +18,9 @@ public class MentorDto implements Serializable {
     public MentorDto() {
     }
 
-    public MentorDto(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     public MentorDto(Mentor entity){
         this.id = entity.getId();
         this.name = entity.getName();
-    }
-    
-    public MentorDto(Mentor entity, Set<Aluno> alunos){
-        this(entity);
-        alunos.forEach(x -> this.alunos.add(new AlunoDto(x)));
-        
     }
 
     public Long getId() {

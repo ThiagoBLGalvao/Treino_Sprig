@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AlunoDto;
+import com.example.demo.mappers.AlunoMapper;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Mentor;
 import com.example.demo.model.Programa;
@@ -14,9 +15,11 @@ import com.example.demo.services.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityNotFoundException;
@@ -44,6 +47,9 @@ public class AlunoServiceTest {
 
     @Mock
     ProgramaService programaService;
+
+    @Spy
+    AlunoMapper mapper = Mappers.getMapper(AlunoMapper.class);
 
     @Test
     public void listAlunoByIdTest(){

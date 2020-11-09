@@ -41,11 +41,6 @@ public class Mentor implements Serializable {
         this.name = name;
     }
 
-    public Mentor(String name, Set<Aluno> alunos) {
-        this.name = name;
-        this.alunos = alunos;
-    }
-
     public Long getId() {
         return id;
     }

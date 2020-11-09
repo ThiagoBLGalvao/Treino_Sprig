@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.dto.AlunoDto;
 import com.example.demo.dto.AvaliacaoDto;
+import com.example.demo.mappers.AlunoMapper;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Avaliacao;
 import com.example.demo.repository.AlunoRepository;
@@ -31,15 +32,18 @@ public class AlunoService {
     @Autowired
     private AvaliacaoRepository avaliacaoRepository;
 
+    @Autowired
+    private AlunoMapper mapper;
+
     @Transactional(readOnly = true)
     public List<AlunoDto> listAllAlunos(){
         List<Aluno> list = repository.findAllActive();
-        return list.stream().map(x-> new AlunoDto(x, x.getAvaliacoes())).collect(Collectors.toList());
+        return list.stream().map(x-> mapper.alunoAndSetAvaliacaoToAlunoDto(x, x.getAvaliacoes())).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public AlunoDto listAlunoDtoById(long id){
-        return new AlunoDto(getAlunoById(id),getAlunoById(id).getAvaliacoes());
+        return mapper.alunoAndSetAvaliacaoToAlunoDto(getAlunoById(id), getAlunoById(id).getAvaliacoes());
     }
 
     @Transactional(readOnly = true)
@@ -57,11 +61,14 @@ public class AlunoService {
     @Transactional
     public AlunoDto creatAluno(AlunoDto dto){
         Aluno entity = new Aluno();
+
         copyToEntity(dto,entity);
+
+        entity.setActive(true);
 
         entity = repository.save(entity);
 
-        return new AlunoDto(entity);
+        return mapper.alunoToAlunoDto(entity);
     }
 
     @Transactional
@@ -71,7 +78,7 @@ public class AlunoService {
             copyToEntity(dto, entity);
 
             entity = repository.save(entity);
-            return new AlunoDto(entity);
+            return mapper.alunoToAlunoDto(entity);
         }catch(EntityNotFoundException e){
             throw new ResourceNotFoundException("Not found entity with id:" + id);
         }
@@ -86,7 +93,7 @@ public class AlunoService {
             entity.setClassMate(dto.getClassMate());
 
             entity = repository.save(entity);
-            return new AlunoDto(entity);
+            return mapper.alunoToAlunoDto(entity);
         }catch(EntityNotFoundException e){
             throw new ResourceNotFoundException("Not found entity with id:" + id);
         }
@@ -114,7 +121,6 @@ public class AlunoService {
         entity.setClassMate(dto.getClassMate());
         entity.setMentor(mentorService.listMentorById(dto.getMentor_id()));
         entity.setPrograma(programaService.listProgramaById(dto.getPrograma_id()));
-        entity.setActive(true);
         for(AvaliacaoDto avaliDto: dto.getAvaliacaoDtoList()){
             Avaliacao avaliacao = avaliacaoRepository.getOne(avaliDto.getId());
             entity.getAvaliacoes().add(avaliacao);

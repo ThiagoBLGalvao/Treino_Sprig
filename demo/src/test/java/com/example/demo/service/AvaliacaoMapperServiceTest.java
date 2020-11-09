@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AvaliacaoDto;
+import com.example.demo.mappers.AlunoMapper;
+import com.example.demo.mappers.AvaliacaoMapper;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Avaliacao;
 import com.example.demo.model.Materia;
@@ -12,8 +14,10 @@ import com.example.demo.services.MateriaService;
 import com.example.demo.services.MentorService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Month;
@@ -24,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AvaliacaoServiceTest {
+public class AvaliacaoMapperServiceTest {
     @InjectMocks
     AvaliacaoService service;
 
@@ -39,6 +43,9 @@ public class AvaliacaoServiceTest {
 
     @Mock
     MentorService mentorService;
+
+    @Spy
+    AvaliacaoMapper mapper = Mappers.getMapper(AvaliacaoMapper.class);
 
     @Test
     public void listAllAvaliacaoTest(){

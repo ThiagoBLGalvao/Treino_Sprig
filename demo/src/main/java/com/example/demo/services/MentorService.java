@@ -2,7 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.dto.AlunoDto;
 import com.example.demo.dto.MentorDto;
-import com.example.demo.mappers.MentorMentorDtoMapperImpl;
+import com.example.demo.mappers.MentorMentorDtoMapper;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Mentor;
 import com.example.demo.repository.AlunoRepository;
@@ -27,18 +27,18 @@ public class MentorService {
     private AlunoRepository alunoRepository;
 
     @Autowired
-    MentorMentorDtoMapperImpl mapper;
+    MentorMentorDtoMapper mapper;
 
-//    alunoRepository.findSetAllActiveAlunosByMentorId(x.getId())
+//  alunoRepository.findSetAllActiveAlunosByMentorId(x.getId())
     @Transactional(readOnly = true)
     public List<MentorDto> listAll(){
         List<Mentor> list = repository.findAllActive();
-        return list.stream().map(x -> new MentorDto(x, x.getAlunos())).collect(Collectors.toList());
+        return list.stream().map(x->mapper.entityAndSetToDto(x,x.getAlunos())).collect(Collectors.toList());
     }
 
     @Transactional
     public MentorDto listMentorDtoById(Long id){
-        return new MentorDto(listMentorById(id));
+        return mapper.entityToDto(listMentorById(id));
     }
 
     @Transactional
@@ -56,7 +56,7 @@ public class MentorService {
 
         entity = repository.save(entity);
 
-        return new MentorDto(entity);
+        return mapper.entityToDto(entity);
     }
 
     @Transactional
@@ -65,7 +65,7 @@ public class MentorService {
             Mentor entity = repository.getOne(id);
             copyToEntity(dto, entity);
             entity = repository.save(entity);
-            return new MentorDto(entity);
+            return mapper.entityToDto(entity);
         }catch(EntityNotFoundException e){
             throw new ResourceNotFoundException("Entity not Found");
         }
