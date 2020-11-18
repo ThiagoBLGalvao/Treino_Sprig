@@ -70,24 +70,24 @@ public class AlunoServiceTest {
                 ()->Assertions.assertEquals("Joseph", alunoDtoTest.getClassMate())
         );
     }
-    @Test
-    public void listaAllAlunoTest(){
-        Programa programaTest = new Programa();
-        programaTest.setName("Stone Mask");
-        programaTest.setId(1L);
-
-        Mentor mentorTest = new Mentor();
-        mentorTest.setName("Jobin");
-        mentorTest.setId(1L);
-
-        Mockito.when(alunoRepository.findAllActive()).thenReturn(List.of(
-                new Aluno("Dio","Dio", mentorTest, programaTest),
-                new Aluno("Jhonny", "Dio", mentorTest, programaTest)
-        ));
-        List<AlunoDto> dto = alunoService.listAllAlunos();
-        Assertions.assertEquals("Dio",dto.get(0).getName());
-        Assertions.assertEquals("Jhonny", dto.get(1).getName());
-    }
+//    @Test
+//    public void listaAllAlunoTest(){
+//        Programa programaTest = new Programa();
+//        programaTest.setName("Stone Mask");
+//        programaTest.setId(1L);
+//
+//        Mentor mentorTest = new Mentor();
+//        mentorTest.setName("Jobin");
+//        mentorTest.setId(1L);
+//
+//        Mockito.when(alunoRepository.findAllActive()).thenReturn(List.of(
+//                new Aluno("Dio","Dio", mentorTest, programaTest),
+//                new Aluno("Jhonny", "Dio", mentorTest, programaTest)
+//        ));
+//        List<AlunoDto> dto = alunoService.listAllAlunos();
+//        Assertions.assertEquals("Dio",dto.get(0).getName());
+//        Assertions.assertEquals("Jhonny", dto.get(1).getName());
+//    }
 
     @Test
     public void createAlunoTest(){

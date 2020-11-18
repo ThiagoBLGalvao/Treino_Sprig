@@ -9,6 +9,8 @@ import com.example.demo.repository.AlunoRepository;
 import com.example.demo.repository.AvaliacaoRepository;
 import com.example.demo.services.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,9 +38,9 @@ public class AlunoService {
     private AlunoMapper mapper;
 
     @Transactional(readOnly = true)
-    public List<AlunoDto> listAllAlunos(){
-        List<Aluno> list = repository.findAllActive();
-        return list.stream().map(x-> mapper.alunoAndSetAvaliacaoToAlunoDto(x, x.getAvaliacoes())).collect(Collectors.toList());
+    public Page<AlunoDto> findAllPaged(PageRequest pageRequest){
+        Page<Aluno> list = repository.findAll(pageRequest);
+        return list.map(x-> mapper.alunoAndSetAvaliacaoToAlunoDto(x, x.getAvaliacoes()));
     }
 
     @Transactional(readOnly = true)

@@ -85,6 +85,7 @@ public class MentorService {
             throw new DatabaseException("This entity cannot be deleted");
         }
     }
+
     private void copyToEntity(MentorDto dto, Mentor entity) {
         entity.setName(dto.getName());
 
