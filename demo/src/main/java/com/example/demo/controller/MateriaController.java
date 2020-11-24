@@ -3,12 +3,14 @@ package com.example.demo.controller;
 import com.example.demo.dto.MateriaDto;
 import com.example.demo.services.MateriaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/materia")
@@ -18,8 +20,15 @@ public class MateriaController {
     private MateriaService service;
 
     @GetMapping
-    public ResponseEntity<List<MateriaDto>> getAll(){
-        List<MateriaDto> list = service.listAll();
+    public ResponseEntity<Page<MateriaDto>> listAllMateria(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "linesPerPage", defaultValue = "3") Integer linesPerPage,
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction,
+            @RequestParam(value = "orderBy", defaultValue = "name") String orderBy
+    ){
+        PageRequest pageRequest = PageRequest.of(page,linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+
+        Page<MateriaDto> list = service.findAllPaged(pageRequest);
         return ResponseEntity.ok().body(list);
     }
 

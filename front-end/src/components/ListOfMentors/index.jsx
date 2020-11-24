@@ -1,0 +1,66 @@
+import { Button, makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+import api from '../../services/api';
+
+
+const useStyles = makeStyles({
+    table: {
+        minWidth: 650
+    }
+});
+
+
+export default function ListOfMentors({backToUpdate}) {
+    const [mentorResponse, setMentorResponse] = useState([]);
+    const [actualPage, setActualPage] = useState(0);
+
+    const classes = useStyles();
+
+    useEffect(() => {
+        api.get(`mentor?linesPerPage=5&page=${actualPage}`)
+            .then(response => {
+                console.log(response);
+                setMentorResponse(response.data.content);
+
+            });
+
+    }, [actualPage]);
+
+    async function handleDelete(id){
+        api.delete(`mentor/${id}`)
+        .then(setMentorResponse(mentorResponse.filter((element)=> element.id !== id)));
+    }
+
+
+    return (
+        <TableContainer component={Paper}>
+            <Table className={classes.table}>
+                <TableHead>
+                    <TableRow>
+                        <TableCell align="center">
+                            Name
+                        </TableCell>
+                        <TableCell align="right">
+                            Actions
+                        </TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {mentorResponse.map(response =>(
+                        <TableRow key={response.id}>
+                            <TableCell align="center">
+                                {response.name}
+                            </TableCell>
+                            <TableCell align="center">
+                                <Button onClick = {()=> backToUpdate(response)}>Alter</Button>
+                            </TableCell>
+                            <TableCell align="center">
+                                <Button onClick = {() => handleDelete(response.id)}>X</Button>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    );
+}

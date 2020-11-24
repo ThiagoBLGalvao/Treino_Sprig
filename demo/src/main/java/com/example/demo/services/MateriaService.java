@@ -8,6 +8,8 @@ import com.example.demo.repository.MateriaRepository;
 import com.example.demo.services.exception.DatabaseException;
 import com.example.demo.services.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,9 +31,9 @@ public class MateriaService {
     MateriaMapper mapper;
 
     @Transactional(readOnly = true)
-    public List<MateriaDto> listAll(){
-        List<Materia> list = repository.findAll();
-        return list.stream().map(mapper::materiaToMateriaDto).collect(Collectors.toList());
+    public Page<MateriaDto> findAllPaged(PageRequest pageRequest){
+        Page<Materia> list = repository.findAll(pageRequest);
+        return list.map(mapper::materiaToMateriaDto);
     }
 
     @Transactional(readOnly = true)

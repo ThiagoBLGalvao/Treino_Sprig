@@ -10,6 +10,8 @@ import com.example.demo.repository.MentorRepository;
 import com.example.demo.services.exception.DatabaseException;
 import com.example.demo.services.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,11 +31,10 @@ public class MentorService {
     @Autowired
     MentorMentorDtoMapper mapper;
 
-//  alunoRepository.findSetAllActiveAlunosByMentorId(x.getId())
     @Transactional(readOnly = true)
-    public List<MentorDto> listAll(){
-        List<Mentor> list = repository.findAllActive();
-        return list.stream().map(x->mapper.entityAndSetToDto(x,x.getAlunos())).collect(Collectors.toList());
+    public Page<MentorDto> findAllPaged(PageRequest pageRequest){
+        Page<Mentor> list = repository.findByActive(true, pageRequest);
+        return list.map(x->mapper.entityAndSetToDto(x,x.getAlunos()));
     }
 
     @Transactional

@@ -47,54 +47,54 @@ public class AvaliacaoMapperServiceTest {
     @Spy
     AvaliacaoMapper mapper = Mappers.getMapper(AvaliacaoMapper.class);
 
-    @Test
-    public void listAllAvaliacaoTest(){
-
-        Mentor mentor = new Mentor();
-        mentor.setId(1L);
-        mentor.setName("Jhonny");
-
-        Materia materia = new Materia();
-        materia.setName("Astronomy");
-        materia.setId(1L);
-
-        Aluno aluno = new Aluno();
-        aluno.setId(1L);
-        aluno.setName("Dio");
-        aluno.setMentor(mentor);
-
-        Avaliacao avaliacao1 = new Avaliacao();
-        avaliacao1.setActive(true);
-        avaliacao1.setMes(Month.of(2));
-        avaliacao1.setMateria(materia);
-        avaliacao1.setMentor(mentor);
-        avaliacao1.setAluno(aluno);
-        avaliacao1.setId(1L);
-        avaliacao1.setNota((double) 10);
-
-        Avaliacao avaliacao2 = new Avaliacao();
-        avaliacao2.setActive(true);
-        avaliacao2.setMes(Month.of(3));
-        avaliacao2.setMateria(materia);
-        avaliacao2.setMentor(mentor);
-        avaliacao2.setAluno(aluno);
-        avaliacao2.setId(1L);
-        avaliacao2.setNota((double) 1);
-
-        when(repository.findAll()).thenReturn(List.of(
-                avaliacao1,
-                avaliacao2
-        ));
-
-        List<AvaliacaoDto> list = service.getAll();
-
-        assertAll(
-                ()->assertEquals(Month.of(2), list.get(0).getMes()),
-                ()->assertEquals(1L, list.get(0).getId()),
-                ()->assertEquals(Month.of(3), list.get(1).getMes()),
-                ()->assertEquals((double) 1, list.get(1).getNota())
-        );
-    }
+//    @Test
+//    public void listAllAvaliacaoTest(){
+//
+//        Mentor mentor = new Mentor();
+//        mentor.setId(1L);
+//        mentor.setName("Jhonny");
+//
+//        Materia materia = new Materia();
+//        materia.setName("Astronomy");
+//        materia.setId(1L);
+//
+//        Aluno aluno = new Aluno();
+//        aluno.setId(1L);
+//        aluno.setName("Dio");
+//        aluno.setMentor(mentor);
+//
+//        Avaliacao avaliacao1 = new Avaliacao();
+//        avaliacao1.setActive(true);
+//        avaliacao1.setMes(Month.of(2));
+//        avaliacao1.setMateria(materia);
+//        avaliacao1.setMentor(mentor);
+//        avaliacao1.setAluno(aluno);
+//        avaliacao1.setId(1L);
+//        avaliacao1.setNota((double) 10);
+//
+//        Avaliacao avaliacao2 = new Avaliacao();
+//        avaliacao2.setActive(true);
+//        avaliacao2.setMes(Month.of(3));
+//        avaliacao2.setMateria(materia);
+//        avaliacao2.setMentor(mentor);
+//        avaliacao2.setAluno(aluno);
+//        avaliacao2.setId(1L);
+//        avaliacao2.setNota((double) 1);
+//
+//        when(repository.findAll()).thenReturn(List.of(
+//                avaliacao1,
+//                avaliacao2
+//        ));
+//
+//        List<AvaliacaoDto> list = service.getAll();
+//
+//        assertAll(
+//                ()->assertEquals(Month.of(2), list.get(0).getMes()),
+//                ()->assertEquals(1L, list.get(0).getId()),
+//                ()->assertEquals(Month.of(3), list.get(1).getMes()),
+//                ()->assertEquals((double) 1, list.get(1).getNota())
+//        );
+//    }
 
     @Test
     public void listByIdAvaliacaoTest(){

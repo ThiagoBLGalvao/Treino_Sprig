@@ -35,23 +35,23 @@ public class ProgramaServiceTest {
     @Spy
     ProgramaMapper mapper = Mappers.getMapper(ProgramaMapper.class);
 
-    @Test
-    public void listAllProgramaTest(){
-
-        when(repository.findAllActive()).thenReturn(List.of(
-                new Programa("Stone Mask Geology"),
-                new Programa("Stand Story")
-        ));
-
-        List<ProgramaDto> list = service.lisAll();
-
-        assertAll(
-                ()-> assertEquals("Stand Story", list.get(1).getName()),
-                ()-> assertEquals(2, list.size()),
-                ()-> assertFalse(list.isEmpty()),
-                ()-> assertEquals("Stone Mask Geology", list.get(0).getName())
-        );
-    }
+//    @Test
+//    public void listAllProgramaTest(){
+//
+//        when(repository.findAllActive()).thenReturn(List.of(
+//                new Programa("Stone Mask Geology"),
+//                new Programa("Stand Story")
+//        ));
+//
+//        List<ProgramaDto> list = service.lisAll();
+//
+//        assertAll(
+//                ()-> assertEquals("Stand Story", list.get(1).getName()),
+//                ()-> assertEquals(2, list.size()),
+//                ()-> assertFalse(list.isEmpty()),
+//                ()-> assertEquals("Stone Mask Geology", list.get(0).getName())
+//        );
+//    }
 
     @Test
     public void listByIdTest(){

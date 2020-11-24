@@ -7,6 +7,8 @@ import com.example.demo.repository.AvaliacaoRepository;
 import com.example.demo.services.exception.DatabaseException;
 import com.example.demo.services.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,9 +36,9 @@ public class AvaliacaoService {
 
 
     @Transactional(readOnly = true)
-    public List<AvaliacaoDto> getAll(){
-        List<Avaliacao> list = repository.findAll();
-        return list.stream().map(mapper::avaliacaoToAvaliacaoDto).collect(Collectors.toList());
+    public Page<AvaliacaoDto> findAllPaged(PageRequest pageRequest){
+        Page<Avaliacao> list = repository.findAll(pageRequest);
+        return list.map(mapper::avaliacaoToAvaliacaoDto);
     }
 
     @Transactional(readOnly = true)

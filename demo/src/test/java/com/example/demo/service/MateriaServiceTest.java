@@ -35,23 +35,23 @@ public class MateriaServiceTest {
     @Spy
     MateriaMapper mapper = Mappers.getMapper(MateriaMapper.class);
 
-    @Test
-    public void listAllMateriaTest(){
-
-        when(repository.findAll()).thenReturn(List.of(
-                new Materia("Astronomy"),
-                new Materia("Biology"),
-                new Materia("Math")
-        ));
-
-        List<MateriaDto> list = service.listAll();
-
-        Assertions.assertAll(
-                ()->Assertions.assertEquals("Astronomy", list.get(0).getName()),
-                ()->Assertions.assertEquals("Math", list.get(2).getName()),
-                ()->Assertions.assertEquals("Biology", list.get(1).getName())
-        );
-    }
+//    @Test
+//    public void listAllMateriaTest(){
+//
+//        when(repository.findAll()).thenReturn(List.of(
+//                new Materia("Astronomy"),
+//                new Materia("Biology"),
+//                new Materia("Math")
+//        ));
+//
+//        List<MateriaDto> list = service.listAll();
+//
+//        Assertions.assertAll(
+//                ()->Assertions.assertEquals("Astronomy", list.get(0).getName()),
+//                ()->Assertions.assertEquals("Math", list.get(2).getName()),
+//                ()->Assertions.assertEquals("Biology", list.get(1).getName())
+//        );
+//    }
 
     @Test
     public void listMateriaByIdTest(){

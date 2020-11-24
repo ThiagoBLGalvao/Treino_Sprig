@@ -9,6 +9,8 @@ import com.example.demo.repository.ProgramaRepository;
 import com.example.demo.services.exception.DatabaseException;
 import com.example.demo.services.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +28,9 @@ public class ProgramaService {
     private AlunoRepository alunoRepository;
 
     @Transactional(readOnly = true)
-    public List<ProgramaDto> lisAll(){
-        List<Programa> list = repository.findAllActive();
-        return list.stream().map(x -> new ProgramaDto(x, x.getAlunos())).collect(Collectors.toList());
+    public Page<ProgramaDto> findAllPaged(PageRequest pageRequest){
+        Page<Programa> list = repository.findAll(pageRequest);
+        return list.map(x -> new ProgramaDto(x, x.getAlunos()));
     }
 
     @Transactional(readOnly = true)
