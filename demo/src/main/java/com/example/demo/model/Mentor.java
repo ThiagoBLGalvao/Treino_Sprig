@@ -18,7 +18,10 @@ public class Mentor implements Serializable {
     private String name;
     private Boolean active;
 
-    @OneToMany(mappedBy = "mentor")
+    @OneToMany(
+            mappedBy = "mentor",
+            fetch =  FetchType.EAGER
+    )
     private Set<Aluno> alunos = new HashSet<>();
 
     @OneToMany(mappedBy = "mentor")

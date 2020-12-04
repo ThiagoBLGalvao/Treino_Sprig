@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.dto.AlunoDto;
 import com.example.demo.dto.ProgramaDto;
+import com.example.demo.mappers.ProgramaMapper;
 import com.example.demo.model.Aluno;
 import com.example.demo.model.Programa;
 import com.example.demo.repository.AlunoRepository;
@@ -25,12 +26,21 @@ public class ProgramaService {
     private ProgramaRepository repository;
 
     @Autowired
+    private ProgramaMapper mapper;
+
+    @Autowired
     private AlunoRepository alunoRepository;
 
     @Transactional(readOnly = true)
     public Page<ProgramaDto> findAllPaged(PageRequest pageRequest){
-        Page<Programa> list = repository.findAll(pageRequest);
+        Page<Programa> list = repository.findByActive(true, pageRequest);
         return list.map(x -> new ProgramaDto(x, x.getAlunos()));
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProgramaDto> finAllListed(){
+        List<Programa> list = repository.findAllActive();
+        return list.stream().map(x -> mapper.programaToDto(x)).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

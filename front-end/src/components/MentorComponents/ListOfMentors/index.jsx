@@ -1,6 +1,8 @@
 import { Button, makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import api from '../../services/api';
+import api from '../../../services/api';
+
+import "./styles.css";
 
 
 const useStyles = makeStyles({
@@ -13,6 +15,7 @@ const useStyles = makeStyles({
 export default function ListOfMentors({backToUpdate}) {
     const [mentorResponse, setMentorResponse] = useState([]);
     const [actualPage, setActualPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
 
     const classes = useStyles();
 
@@ -21,7 +24,7 @@ export default function ListOfMentors({backToUpdate}) {
             .then(response => {
                 console.log(response);
                 setMentorResponse(response.data.content);
-
+                setTotalPages(response.data.totalPages);
             });
 
     }, [actualPage]);
@@ -52,7 +55,7 @@ export default function ListOfMentors({backToUpdate}) {
                                 {response.name}
                             </TableCell>
                             <TableCell align="center">
-                                <Button onClick = {()=> backToUpdate(response)}>Alter</Button>
+                                <Button onClick = {()=> backToUpdate(response, 0)}>Alter</Button>
                             </TableCell>
                             <TableCell align="center">
                                 <Button onClick = {() => handleDelete(response.id)}>X</Button>
@@ -61,6 +64,14 @@ export default function ListOfMentors({backToUpdate}) {
                     ))}
                 </TableBody>
             </Table>
+            <div className = "paginationButtons">
+                <Button disabled = {actualPage === 0} onClick={() => setActualPage(actualPage - 1)}>
+                    {"<"}
+                </Button>
+                <Button disabled = {actualPage === totalPages -1} onClick={() => setActualPage(actualPage + 1)}>
+                    {">"}
+                </Button>
+            </div>
         </TableContainer>
     );
 }

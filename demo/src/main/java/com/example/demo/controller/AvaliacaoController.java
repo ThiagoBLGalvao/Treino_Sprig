@@ -38,4 +38,16 @@ public class AvaliacaoController {
 
         return ResponseEntity.created(uri).body(dto);
     }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<AvaliacaoDto> update(@PathVariable Long id, @RequestBody AvaliacaoDto dto){
+        dto = service.update(id, dto);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<AvaliacaoDto> deleteById(@PathVariable Long id){
+        service.deleteAvaliacao(id);
+        return ResponseEntity.noContent().build();
+    }
 }

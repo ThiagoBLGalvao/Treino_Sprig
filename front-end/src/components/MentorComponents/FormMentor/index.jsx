@@ -1,25 +1,24 @@
-import { Button, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import React, { useState } from 'react';
 
-import api from '../../services/api';
+import api from '../../../services/api';
+import Form from '../../Form';
 
 import "./styles.css";
 
 
-export default function FormMentor({ mentorUpdate }) {
+export default function FormMentor({ mentorUpdate, backToUpdate }) {
     const [name, setName] = useState("");
 
-    function handleSubmit(e) {
-        e.preventDefault();
+    function handleSubmit() {
         if (!(Object.keys(mentorUpdate).length > 1)) {
-            handleCreateMentor(e);
+            handleCreateMentor();
         } else {
-            handleUpdate(e);
+            handleUpdate();
         }
     }
 
-    async function handleCreateMentor(e) {
-        e.preventDefault();
+    async function handleCreateMentor() {
         console.log(mentorUpdate);
         const data = {
             name
@@ -31,19 +30,25 @@ export default function FormMentor({ mentorUpdate }) {
         }
     }
 
-    async function handleUpdate(e) {
+    async function handleUpdate() {
         const data = {
             name
         };
 
         await api.put(`mentor/${mentorUpdate.id}`, data)
-            .then(response => alert("Mentor" + mentorUpdate.name + " updated"))
+            .then(backToUpdate({}, 2));
+    }
 
+    function getButtonText() {
+        return Object.keys(mentorUpdate).length > 1 ? "Update" : "Create"
     }
 
     return (
         <div className="contentForm">
-            <form style={{ width: "100%" }} onSubmit={handleSubmit}>
+            <Form
+                handleSubmit={handleSubmit}
+                action={getButtonText()}
+            >
                 <TextField
                     id="name"
                     name="name"
@@ -54,17 +59,7 @@ export default function FormMentor({ mentorUpdate }) {
                     value={name}
                     onChange={e => setName(e.target.value)}
                 />
-                <Button
-                    fullWidth
-                    type="submit"
-                    variant="contained"
-                    color="primary" 
-                >
-                    {
-                        Object.keys(mentorUpdate).length > 1 ? "Update" : "Create"
-                    }
-                </Button>
-            </form>
+            </Form>
         </div>
     );
 }

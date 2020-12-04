@@ -1,12 +1,10 @@
 package com.example.demo.dto;
 
-import com.example.demo.model.Aluno;
 import com.example.demo.model.Mentor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class MentorDto implements Serializable {
     private static final long  serialVersionUID=1L;

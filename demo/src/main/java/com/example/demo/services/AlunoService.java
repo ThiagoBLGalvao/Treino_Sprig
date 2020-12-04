@@ -43,6 +43,12 @@ public class AlunoService {
         return list.map(x-> mapper.alunoAndSetAvaliacaoToAlunoDto(x, x.getAvaliacoes()));
     }
 
+    @Transactional
+    public List<AlunoDto> listAllAluno(){
+        List<Aluno> list = repository.findByActive(true);
+        return list.stream().map(mapper::alunoToAlunoDto).collect(Collectors.toList());
+    }
+
     @Transactional(readOnly = true)
     public AlunoDto listAlunoDtoById(long id){
         return mapper.alunoAndSetAvaliacaoToAlunoDto(getAlunoById(id), getAlunoById(id).getAvaliacoes());
@@ -50,7 +56,7 @@ public class AlunoService {
 
     @Transactional(readOnly = true)
     public Aluno getAlunoById(long id){
-        Optional<Aluno> obj = repository.findById(id);
+        Optional<Aluno> obj = repository.findByActiveAndId(true, id);
         Aluno entity = obj.orElseThrow( () ->new ResourceNotFoundException("Student with id: " + id + ", not Found!"));
         return entity;
     }
@@ -121,7 +127,7 @@ public class AlunoService {
     private void copyToEntity(AlunoDto dto, Aluno entity) {
         entity.setName(dto.getName());
         entity.setClassMate(dto.getClassMate());
-        entity.setMentor(mentorService.listMentorById(dto.getMentor_id()));
+        entity.setMentor(mentorService.getMentorById(dto.getMentor_id()));
         entity.setPrograma(programaService.listProgramaById(dto.getPrograma_id()));
         for(AvaliacaoDto avaliDto: dto.getAvaliacaoDtoList()){
             Avaliacao avaliacao = avaliacaoRepository.getOne(avaliDto.getId());

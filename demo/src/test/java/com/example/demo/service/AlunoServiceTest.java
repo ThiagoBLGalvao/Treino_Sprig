@@ -21,8 +21,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 
 import javax.persistence.EntityNotFoundException;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -61,7 +63,7 @@ public class AlunoServiceTest {
         mentorTest.setName("Jobin");
         mentorTest.setId(1L);
 
-        Mockito.when(alunoRepository.findById(1L)).thenReturn(java.util.Optional.of(new Aluno("Dio","Joseph",mentorTest,programaTest)));
+        Mockito.when(alunoRepository.findByActiveAndId(true,1L)).thenReturn(java.util.Optional.of(new Aluno("Dio","Joseph",mentorTest,programaTest)));
 
         AlunoDto alunoDtoTest = alunoService.listAlunoDtoById(1L);
 
@@ -70,24 +72,36 @@ public class AlunoServiceTest {
                 ()->Assertions.assertEquals("Joseph", alunoDtoTest.getClassMate())
         );
     }
-//    @Test
-//    public void listaAllAlunoTest(){
-//        Programa programaTest = new Programa();
-//        programaTest.setName("Stone Mask");
-//        programaTest.setId(1L);
-//
-//        Mentor mentorTest = new Mentor();
-//        mentorTest.setName("Jobin");
-//        mentorTest.setId(1L);
-//
-//        Mockito.when(alunoRepository.findAllActive()).thenReturn(List.of(
-//                new Aluno("Dio","Dio", mentorTest, programaTest),
-//                new Aluno("Jhonny", "Dio", mentorTest, programaTest)
-//        ));
-//        List<AlunoDto> dto = alunoService.listAllAlunos();
-//        Assertions.assertEquals("Dio",dto.get(0).getName());
-//        Assertions.assertEquals("Jhonny", dto.get(1).getName());
-//    }
+    @Test
+    public void findAllPagedTest(){
+        Programa programaTest = new Programa();
+        programaTest.setName("Stone Mask");
+        programaTest.setId(1L);
+
+        Mentor mentorTest = new Mentor();
+        mentorTest.setName("Jobin");
+        mentorTest.setId(1L);
+
+        Integer page = 0 ;
+        Integer linsPerPage= 5;
+        String orderBy ="name";
+        String direction = "ASC";
+
+        List<Aluno> test = List.of(
+                new Aluno("Dio","Gatodae",mentorTest, programaTest ),
+                new Aluno("Jonathan","Joseph",mentorTest, programaTest ));
+
+       Pageable pageable = PageRequest.of(page,linsPerPage, Sort.Direction.valueOf(direction),orderBy);
+
+       PageRequest pageRequest = PageRequest.of(page,linsPerPage, Sort.Direction.valueOf(direction),orderBy);
+
+        Page<Aluno> pageAluno = new PageImpl<>(test, pageable, 1);
+
+        Mockito.when(alunoRepository.findAll(pageRequest)).thenReturn(pageAluno);
+        Page<AlunoDto> dto = alunoService.findAllPaged(pageRequest);
+        Assertions.assertEquals("Dio",dto.getContent().get(0).getName());
+        Assertions.assertEquals("Jonathan", dto.getContent().get(1).getName());
+    }
 
     @Test
     public void createAlunoTest(){
@@ -105,7 +119,7 @@ public class AlunoServiceTest {
         aluno.setMentor(mentorTest);
         aluno.setPrograma(programaTest);
 
-        Mockito.when(mentorService.listMentorById(alunoDto.getMentor_id())).thenReturn((mentorTest));
+        Mockito.when(mentorService.getMentorById(alunoDto.getMentor_id())).thenReturn((mentorTest));
 
         Mockito.when(programaService.listProgramaById(alunoDto.getPrograma_id())).thenReturn(programaTest);
 
@@ -116,7 +130,7 @@ public class AlunoServiceTest {
         Assertions.assertAll(
                 ()->Assertions.assertEquals("Jonathan", testDto.getName()),
                 ()->Assertions.assertEquals("Dio", testDto.getClassMate()),
-                ()->Assertions.assertEquals(1l, testDto.getMentor_id())
+                ()->Assertions.assertEquals(1L, testDto.getMentor_id())
         );
 
     }
@@ -138,7 +152,7 @@ public class AlunoServiceTest {
         aluno.setPrograma(programaTest);
 
 
-        Mockito.when(mentorService.listMentorById(alunoDto.getMentor_id())).thenReturn((mentorTest));
+        Mockito.when(mentorService.getMentorById(alunoDto.getMentor_id())).thenReturn((mentorTest));
 
         Mockito.when(programaService.listProgramaById(alunoDto.getPrograma_id())).thenReturn(programaTest);
 

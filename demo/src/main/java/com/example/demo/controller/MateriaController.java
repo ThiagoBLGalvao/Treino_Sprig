@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/materia")
@@ -35,6 +36,11 @@ public class MateriaController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<MateriaDto> getById(@PathVariable Long id){
         return ResponseEntity.ok().body(service.listMateriaDtoById(id));
+    }
+
+    @GetMapping(value = "/all")
+    public ResponseEntity<List<MateriaDto>> listAll(){
+        return ResponseEntity.ok().body(service.listAllMateria());
     }
 
     @PostMapping

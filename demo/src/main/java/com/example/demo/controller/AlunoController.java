@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.AlunoDto;
+import com.example.demo.dto.MateriaDto;
 import com.example.demo.services.AlunoService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +38,11 @@ public class AlunoController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<AlunoDto> getAlunoById(@PathVariable long id){
         return ResponseEntity.ok().body(service.listAlunoDtoById(id));
+    }
+
+    @GetMapping(value = "/all")
+    public ResponseEntity<List<AlunoDto>> listAll(){
+        return ResponseEntity.ok().body(service.listAllAluno());
     }
 
     @PostMapping

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/programa")
@@ -20,7 +21,7 @@ public class ProgramaController {
     private ProgramaService service;
 
     @GetMapping
-    public ResponseEntity<Page<ProgramaDto>> listAllPrograma(
+    public ResponseEntity<Page<ProgramaDto>> listAllProgramaPage(
             @RequestParam(value = "page", defaultValue = "0")Integer page,
             @RequestParam(value = "linesPerPage", defaultValue = "2")Integer linesPerPage,
             @RequestParam(value = "direction", defaultValue = "ASC")String direction,
@@ -28,6 +29,12 @@ public class ProgramaController {
             ){
         PageRequest pageRequest = PageRequest.of(page,linesPerPage, Sort.Direction.valueOf(direction), orderBy);
         Page<ProgramaDto> list = service.findAllPaged(pageRequest);
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/all")
+    public ResponseEntity<List<ProgramaDto>> listAllProgramaList(){
+        List<ProgramaDto> list = service.finAllListed();
         return ResponseEntity.ok().body(list);
     }
 

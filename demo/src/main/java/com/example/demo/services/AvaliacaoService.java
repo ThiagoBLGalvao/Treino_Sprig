@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AvaliacaoService {
@@ -66,6 +64,19 @@ public class AvaliacaoService {
     }
 
     @Transactional
+    public AvaliacaoDto update(Long id, AvaliacaoDto dto){
+        try{
+            Avaliacao entity = repository.getOne(id);
+            copyToEntity(entity, dto);
+
+            entity = repository.save(entity);
+            return mapper.avaliacaoToAvaliacaoDto(entity);
+        }catch(EntityNotFoundException e){
+            throw new ResourceNotFoundException("Avaliação não encontrada");
+        }
+    }
+
+    @Transactional
     public void deleteAvaliacao(Long id){
         try {
             Avaliacao entity = repository.getOne(id);
@@ -86,7 +97,7 @@ public class AvaliacaoService {
         entity.setNota(dto.getNota());
         entity.setMes(dto.getMes());
         entity.setAluno(alunoService.getAlunoById(dto.getAluno_id()));
-        entity.setMentor(mentorService.listMentorById(dto.getMentor_id()));
+        entity.setMentor(mentorService.getMentorById(dto.getMentor_id()));
         entity.setMateria(materiaService.listMateriaById(dto.getMateria_id()));
     }
 }

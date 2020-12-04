@@ -48,6 +48,13 @@ public class MateriaService {
         return entity;
     }
 
+    @Transactional
+    public List<MateriaDto> listAllMateria(){
+        List<Materia> list = repository.findByActive(true);
+        return list.stream().map(mapper::materiaToMateriaDto).collect(Collectors.toList());
+
+    }
+
 
     @Transactional
     public MateriaDto create(MateriaDto dto){

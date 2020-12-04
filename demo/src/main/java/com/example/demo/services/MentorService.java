@@ -37,13 +37,18 @@ public class MentorService {
         return list.map(x->mapper.entityAndSetToDto(x,x.getAlunos()));
     }
 
-    @Transactional
-    public MentorDto listMentorDtoById(Long id){
-        return mapper.entityToDto(listMentorById(id));
+    public List<MentorDto> listAllMentor(){
+        List<Mentor> list = repository.findByActive(true);
+        return list.stream().map(x -> mapper.entityToDto(x)).collect(Collectors.toList());
     }
 
     @Transactional
-    public Mentor listMentorById(Long id){
+    public MentorDto listMentorDtoById(Long id){
+        return mapper.entityToDto(getMentorById(id));
+    }
+
+    @Transactional
+    public Mentor getMentorById(Long id){
         Optional<Mentor> obj = repository.findById(id);
         Mentor entity = obj.orElseThrow( () ->new ResourceNotFoundException("Master with id: " + id + ", not Found!"));
         return entity;

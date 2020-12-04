@@ -15,6 +15,8 @@ public class AvaliacaoDto implements Serializable {
     private Long mentor_id;
     private Long aluno_id;
     private Long materia_id;
+    private MateriaDto materiaDto;
+    private AlunoDto alunoDto;
 
     public AvaliacaoDto() {
     }
@@ -26,14 +28,6 @@ public class AvaliacaoDto implements Serializable {
         this.aluno_id = entity.getAluno().getId();
         this.mentor_id = entity.getMentor().getId();
         this.materia_id = entity.getMateria().getId();
-    }
-
-    public AvaliacaoDto(Double nota, Month mes, Long mentor_id, Long aluno_id, Long materia_id) {
-        this.nota = nota;
-        this.mes = mes;
-        this.mentor_id = mentor_id;
-        this.aluno_id = aluno_id;
-        this.materia_id = materia_id;
     }
 
     public Long getId() {
@@ -82,6 +76,22 @@ public class AvaliacaoDto implements Serializable {
 
     public void setMateria_id(Long materia_id) {
         this.materia_id = materia_id;
+    }
+
+    public MateriaDto getMateriaDto() {
+        return materiaDto;
+    }
+
+    public void setMateriaDto(MateriaDto materiaDto) {
+        this.materiaDto = materiaDto;
+    }
+
+    public AlunoDto getAlunoDto() {
+        return alunoDto;
+    }
+
+    public void setAlunoDto(AlunoDto alunoDto) {
+        this.alunoDto = alunoDto;
     }
 
     @Override

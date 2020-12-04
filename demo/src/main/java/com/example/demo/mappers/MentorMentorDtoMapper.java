@@ -11,6 +11,10 @@ import java.util.Set;
 
 @Mapper(componentModel = "spring", uses = {AlunoMapper.class})
 public interface MentorMentorDtoMapper {
+//    @Mappings({
+//            @Mapping(target = "id", source = "entity.id"),
+//            @Mapping(target = "name", source = "entity.name")
+//    })
     MentorDto entityToDto(Mentor entity);
 
     @Mappings({

@@ -1,0 +1,14 @@
+.contentForm{
+    display: flex;
+    justify-content: center;
+    width: 60%;
+    background: rgb(82, 82, 82);
+    border-radius: 10px;
+    padding: 0.5rem;
+}
+.dataCollectorContainer{
+    display:flex;
+    justify-content: space-around;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
