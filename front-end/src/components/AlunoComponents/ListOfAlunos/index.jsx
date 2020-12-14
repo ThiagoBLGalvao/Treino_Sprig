@@ -1,5 +1,6 @@
-import { Button, makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, withStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
+import { Button, makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, withStyles } from '@material-ui/core';
+import { DeleteForever, Edit } from "@material-ui/icons";
 import api from '../../../services/api';
 import TableList from '../../TableList';
 
@@ -7,7 +8,7 @@ import "./styles.css";
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
-        backgroundColor: "#035aa6",
+        backgroundColor: "#2b2b2b",
         color: theme.palette.common.white,
     },
     body: {
@@ -18,7 +19,7 @@ const StyledTableCell = withStyles((theme) => ({
 const StyledTableRow = withStyles((theme) => ({
     root: {
 
-        backgroundColor: "#035aa6",
+        backgroundColor: "#808080",
 
     },
 }))(TableRow);
@@ -26,7 +27,23 @@ const StyledTableRow = withStyles((theme) => ({
 const useStyles = makeStyles({
     table: {
         minWidth: 650
-    }
+    },
+    tableCell:{
+        display:"flex",
+        justifyContent:"space-around",
+    },
+    button:{
+        '&:hover':{
+            backgroundColor:"#fcbf1e",
+            color:"#000"
+        }
+    },
+    buttonDelete:{
+        '&:hover':{
+            backgroundColor:"#fcbf1e",
+            color:"#f05454"
+        }
+    },
 });
 
 
@@ -56,12 +73,15 @@ export default function ListOfMentors({ backToUpdate }) {
     return (
         <TableList>
 
-            <TableContainer component={Paper}>
+            <TableContainer  component={Paper}>
                 <Table className={classes.table}>
                     <TableHead>
                         <StyledTableRow>
                             <StyledTableCell align="center">
                                 Name
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
+                                Classmate
                             </StyledTableCell>
                             <StyledTableCell align="center">
                                 Actions
@@ -70,16 +90,23 @@ export default function ListOfMentors({ backToUpdate }) {
                     </TableHead>
                     <TableBody>
                         {AlunoResponse.map(response => (
-                            <StyledTableRow key={response.id}>
-                                <StyledTableCell align="center">
+                            <TableRow key={response.id}>
+                                <TableCell align="center">
                                     {response.name}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    <Button onClick={() => backToUpdate(response, 0)}>Alter</Button>
+                                </TableCell>
+                                <TableCell align="center">
+                                    {response.classMate}
+                                </TableCell>
+                                <TableCell className = {classes.tableCell} align="center">
+                                    <Button className={classes.button} onClick={() => backToUpdate(response, 0)}>
+                                        <Edit/>
+                                    </Button>
 
-                                    <Button onClick={() => handleDelete(response.id)}>X</Button>
-                                </StyledTableCell>
-                            </StyledTableRow>
+                                    <Button className = {classes.buttonDelete} onClick={() => handleDelete(response.id)}>
+                                        <DeleteForever/>
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
                         ))}
                     </TableBody>
                 </Table>

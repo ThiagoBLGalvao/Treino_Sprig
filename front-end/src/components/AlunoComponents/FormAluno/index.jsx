@@ -110,7 +110,6 @@ export default function FormAluno({ alunoUpdate, backToUpdate }) {
                             value={programa_id}
                             onChange={(e) => setProgramaId(e.target.value)}
                         >
-                            <MenuItem value=""><em>Programa</em> </MenuItem>
                             {programaData.map(programa => (
                                 <MenuItem key={programa.id} value={programa.id}>{programa.name}</MenuItem>
                             ))}

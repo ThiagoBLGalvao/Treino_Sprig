@@ -4,6 +4,7 @@
     justify-content: space-around;
     align-content: center;
     width: 100%;
+    overflow: hidden;
 }
 .stateContainer{
     display: flex;
@@ -12,6 +13,5 @@
     justify-content: space-evenly;
     width: 100%;
     margin-right: 2rem;
-    margin-left: 2rem;
     margin-top: 6rem;
 }

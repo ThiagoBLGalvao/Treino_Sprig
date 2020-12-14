@@ -6,7 +6,8 @@ import './styles.css';
 
 const useStyles = makeStyles({
     button:{
-        minWidth: 300
+        maxWidth: 300,
+        width:"100%"
     }
 });
 
@@ -15,7 +16,7 @@ export default function LinesContent({text, link}){
     
     return(
         <div className="line-content">
-                <Link to= {link} style = {{textDecoration: "none"}}>
+                <Link to= {link} style = {{width:"100%",maxWidth:300,textDecoration: "none"}}>
                     <Button className = {classes.button} variant = "contained" color = "primary">
                         {text}
                     </Button>

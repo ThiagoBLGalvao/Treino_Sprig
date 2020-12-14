@@ -2,14 +2,12 @@ import React from 'react';
 import Routes from './routes';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core'
 import "./global.css";
-import HeaderComponent from './components/HeaderComponent';
-import FooterComponent from './components/FooterComponent';
 
 const theme = createMuiTheme({
    palette: {
       type: 'dark', 
       primary: { 
-        main: "#40bad5" 
+        main: "#808080" 
       } 
     },
     typography: {
@@ -22,9 +20,7 @@ const theme = createMuiTheme({
 function App() {
   return (
     <ThemeProvider theme = {theme}>
-      <HeaderComponent />
       <Routes />
-      <FooterComponent/>
     </ThemeProvider>
   );
 }

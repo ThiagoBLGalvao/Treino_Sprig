@@ -1,12 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button, makeStyles } from '@material-ui/core';
 
 import "./styles.css"
 
 const useStyles = makeStyles({
     button:{
-        minWidth:100
+        minWidth:100,
+        height:30,
+        color:"#000",
+        '&:hover':{
+            backgroundColor:"#fcbf1e",
+            color:"#000"
+        }
     }
 })
 
@@ -25,11 +30,6 @@ export default function ManagementComponent({ children, handleChangeState }) {
                 <Button color="primary" className = {classes.button} variant="contained" onClick={() => handleChangeState(0)}>
                     Create
                 </Button>
-                <Link to="/" style={{ textDecoration: "none" }}>
-                    <Button color="primary" className = {classes.button} variant="contained">
-                        Home
-                    </Button>
-                </Link>
                 <Button color="primary" className = {classes.button} variant="contained" onClick={() => handleChangeState(1)}>
                     List
                 </Button>
