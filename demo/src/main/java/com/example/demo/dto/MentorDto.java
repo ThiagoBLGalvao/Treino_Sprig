@@ -1,12 +1,10 @@
 package com.example.demo.dto;
 
-import com.example.demo.model.Aluno;
 import com.example.demo.model.Mentor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class MentorDto implements Serializable {
     private static final long  serialVersionUID=1L;
@@ -18,20 +16,9 @@ public class MentorDto implements Serializable {
     public MentorDto() {
     }
 
-    public MentorDto(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     public MentorDto(Mentor entity){
         this.id = entity.getId();
         this.name = entity.getName();
-    }
-    
-    public MentorDto(Mentor entity, Set<Aluno> alunos){
-        this(entity);
-        alunos.forEach(x -> this.alunos.add(new AlunoDto(x)));
-        
     }
 
     public Long getId() {

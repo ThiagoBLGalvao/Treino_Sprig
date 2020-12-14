@@ -22,13 +22,6 @@ public class ProgramaDto implements Serializable {
     public ProgramaDto() {
     }
 
-    public ProgramaDto(String name, Instant begingDate, Instant endingDate, List<AlunoDto> alunos) {
-        this.name = name;
-        this.beginningDate = begingDate;
-        this.endingDate = endingDate;
-        this.alunos = alunos;
-    }
-
     public ProgramaDto(Programa entity) {
         this.id = entity.getId();
         this.name = entity.getName();

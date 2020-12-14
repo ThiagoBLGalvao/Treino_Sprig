@@ -1,0 +1,5 @@
+.paginationButtons{
+    display:flex;
+    justify-content: flex-end;
+    padding: 0.5rem 15rem 0.5rem;
+}

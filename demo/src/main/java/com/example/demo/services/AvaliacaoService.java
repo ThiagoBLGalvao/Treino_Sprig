@@ -1,19 +1,19 @@
 package com.example.demo.services;
 
 import com.example.demo.dto.AvaliacaoDto;
-import com.example.demo.model.Aluno;
+import com.example.demo.mappers.AvaliacaoMapper;
 import com.example.demo.model.Avaliacao;
 import com.example.demo.repository.AvaliacaoRepository;
 import com.example.demo.services.exception.DatabaseException;
 import com.example.demo.services.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AvaliacaoService {
@@ -29,18 +29,21 @@ public class AvaliacaoService {
     @Autowired
     private MateriaService materiaService;
 
+    @Autowired
+    AvaliacaoMapper mapper;
+
 
     @Transactional(readOnly = true)
-    public List<AvaliacaoDto> getAll(){
-        List<Avaliacao> list = repository.findAll();
-        return list.stream().map(AvaliacaoDto::new).collect(Collectors.toList());
+    public Page<AvaliacaoDto> findAllPaged(PageRequest pageRequest){
+        Page<Avaliacao> list = repository.findAll(pageRequest);
+        return list.map(mapper::avaliacaoToAvaliacaoDto);
     }
 
     @Transactional(readOnly = true)
     public AvaliacaoDto getById(Long id){
         Optional<Avaliacao> obj = repository.findById(id);
         Avaliacao entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity Not Found"));
-        return new AvaliacaoDto(entity);
+        return mapper.avaliacaoToAvaliacaoDto(entity);
     }
 
     @Transactional
@@ -51,12 +54,25 @@ public class AvaliacaoService {
                 copyToEntity(entity, dto);
                 entity.setActive(true);
                 entity = repository.save(entity);
-                return new AvaliacaoDto(entity);
+                return mapper.avaliacaoToAvaliacaoDto(entity);
             }else{
                 throw new DatabaseException("This Mentor cannot rate this Aluno");
             }
         }catch (EntityNotFoundException e){
             throw new ResourceNotFoundException("Some Entity Not Found");
+        }
+    }
+
+    @Transactional
+    public AvaliacaoDto update(Long id, AvaliacaoDto dto){
+        try{
+            Avaliacao entity = repository.getOne(id);
+            copyToEntity(entity, dto);
+
+            entity = repository.save(entity);
+            return mapper.avaliacaoToAvaliacaoDto(entity);
+        }catch(EntityNotFoundException e){
+            throw new ResourceNotFoundException("Avaliação não encontrada");
         }
     }
 
@@ -81,7 +97,7 @@ public class AvaliacaoService {
         entity.setNota(dto.getNota());
         entity.setMes(dto.getMes());
         entity.setAluno(alunoService.getAlunoById(dto.getAluno_id()));
-        entity.setMentor(mentorService.listMentorById(dto.getMentor_id()));
+        entity.setMentor(mentorService.getMentorById(dto.getMentor_id()));
         entity.setMateria(materiaService.listMateriaById(dto.getMateria_id()));
     }
 }

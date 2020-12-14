@@ -31,19 +31,12 @@ public class Programa implements Serializable {
     public Programa() {
     }
 
-    public Programa(String name){
-        this.name = name;
-    }
-    public Programa(Long id, String name){
+    public Programa(Long id, String name, Boolean active, Instant beginningDate, Instant endingDate){
         this.id = id;
         this.name = name;
-    }
-
-    public Programa(String name, Instant beginingDate, Instant endingDate, Set<Aluno> alunos) {
-        this.name = name;
-        this.beginningDate = beginingDate;
+        this.active = active;
+        this.beginningDate = beginningDate;
         this.endingDate = endingDate;
-        this.alunos = alunos;
     }
 
     public Long getId() {

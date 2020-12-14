@@ -1,19 +1,22 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.MateriaDto;
-import com.example.demo.dto.MentorDto;
+import com.example.demo.fixtures.MateriaDtoFixture;
+import com.example.demo.fixtures.MateriaFixture;
+import com.example.demo.mappers.MateriaMapper;
 import com.example.demo.model.Materia;
-import com.example.demo.model.Mentor;
 import com.example.demo.repository.AvaliacaoRepository;
 import com.example.demo.repository.MateriaRepository;
 import com.example.demo.services.MateriaService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 
 import java.util.List;
 
@@ -32,70 +35,77 @@ public class MateriaServiceTest {
     @Mock
     private AvaliacaoRepository avaliacaoRepository;
 
+    @Spy
+    MateriaMapper mapper = Mappers.getMapper(MateriaMapper.class);
+
     @Test
-    public void listAllMateriaTest(){
+    public void pageAllMateriaTest(){
+        List<Materia> listMateria = List.of(
+                new Materia(1L, "Astronomy", true),
+                new Materia(2L,"Biology", true),
+                new Materia(3L, "Math", true)
+        );
 
-        when(repository.findAll()).thenReturn(List.of(
-                new Materia("Astronomy"),
-                new Materia("Biology"),
-                new Materia("Math")
-        ));
+        Integer page = 0 ;
+        Integer linsPerPage= 5;
+        String orderBy ="name";
+        String direction = "ASC";
 
-        List<MateriaDto> list = service.listAll();
+        Pageable pageable = PageRequest.of(page,linsPerPage, Sort.Direction.valueOf(direction),orderBy);
+
+        PageRequest pageRequest = PageRequest.of(page,linsPerPage, Sort.Direction.valueOf(direction),orderBy);
+
+        Page<Materia> materiaTest = new PageImpl<>(listMateria, pageable, 1);
+
+        when(repository.findAll(pageRequest)).thenReturn(materiaTest);
+
+        Page<MateriaDto> pageDto = service.findAllPaged(pageRequest);
 
         Assertions.assertAll(
-                ()->Assertions.assertEquals("Astronomy", list.get(0).getName()),
-                ()->Assertions.assertEquals("Math", list.get(2).getName()),
-                ()->Assertions.assertEquals("Biology", list.get(1).getName())
+                ()->Assertions.assertEquals("Astronomy", pageDto.getContent().get(0).getName()),
+                ()->Assertions.assertEquals("Math", pageDto.getContent().get(2).getName()),
+                ()->Assertions.assertEquals("Biology", pageDto.getContent().get(1).getName())
         );
     }
 
     @Test
     public void listMateriaByIdTest(){
 
-        when(repository.findById(1L)).thenReturn(java.util.Optional.of(new Materia("Science")));
+        when(repository.findById(1L)).thenReturn(java.util.Optional.of(MateriaFixture.buildMateriaDefault()));
 
         MateriaDto dto = service.listMateriaDtoById(1L);
 
-        Assertions.assertEquals("Science", dto.getName());
+        Assertions.assertEquals("Math", dto.getName());
     }
 
     @Test
     public void createMateriaTest(){
 
-        Materia entity = new Materia("Jonathan");
+        when(repository.save(any())).thenReturn(MateriaFixture.buildMateriaDefault());
 
-        when(repository.save(any())).thenReturn(entity);
+        MateriaDto dto= service.create(MateriaDtoFixture.buildMateriaDtoDefault());
 
-        MateriaDto testDto = new MateriaDto(entity);
-
-        MateriaDto dto= service.create(testDto);
-
-        Assertions.assertEquals("Jonathan", dto.getName());
+        Assertions.assertEquals("Math", dto.getName());
     }
 
     @Test
     public void updateMateriaTest(){
 
-        Materia entity = new Materia("Astronomy");
+        MateriaDto dtoTest = new MateriaDto(MateriaFixture.buildMateriaToUpdate());
 
-        MateriaDto dtoTest = new MateriaDto("Biology");
+        when(repository.getOne(1L)).thenReturn(MateriaFixture.buildMateriaDefault());
 
-        when(repository.getOne(1L)).thenReturn(entity);
+        when(repository.save(any())).thenReturn(new Materia(1L, dtoTest.getName(), true));
 
-        when(repository.save(any())).thenReturn(new Materia(dtoTest.getName()));
+        MateriaDto updateTest = service.update(1L,MateriaDtoFixture.buildMateriaDtoDefault());
 
-        MateriaDto updateTest = service.update(1L,dtoTest);
-
-        Assertions.assertEquals("Biology", updateTest.getName());
+        Assertions.assertEquals("Astronomy", updateTest.getName());
     }
 
     @Test
     public void deleteMateriaTest(){
 
-        Materia entity = new Materia();
-        entity.setName("Astronomy");
-        entity.setActive(true);
+        Materia entity = MateriaFixture.buildMateriaDefault();
 
         Materia deletedEntity = new Materia();
         deletedEntity.setActive(false);

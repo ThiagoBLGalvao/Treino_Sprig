@@ -1,15 +1,15 @@
 package com.example.demo.services;
 
 import com.example.demo.dto.MateriaDto;
+import com.example.demo.mappers.MateriaMapper;
 import com.example.demo.model.Materia;
-import com.example.demo.model.Mentor;
 import com.example.demo.repository.AvaliacaoRepository;
 import com.example.demo.repository.MateriaRepository;
 import com.example.demo.services.exception.DatabaseException;
 import com.example.demo.services.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,15 +27,18 @@ public class MateriaService {
     @Autowired
     AvaliacaoRepository avaliacaoRepository;
 
+    @Autowired
+    MateriaMapper mapper;
+
     @Transactional(readOnly = true)
-    public List<MateriaDto> listAll(){
-        List<Materia> list = repository.findAll();
-        return list.stream().map(MateriaDto::new).collect(Collectors.toList());
+    public Page<MateriaDto> findAllPaged(PageRequest pageRequest){
+        Page<Materia> list = repository.findAll(pageRequest);
+        return list.map(mapper::materiaToMateriaDto);
     }
 
     @Transactional(readOnly = true)
     public MateriaDto listMateriaDtoById(Long id){
-        return new MateriaDto(listMateriaById(id));
+        return mapper.materiaToMateriaDto(listMateriaById(id));
     }
 
     @Transactional(readOnly = true)
@@ -45,6 +48,13 @@ public class MateriaService {
         return entity;
     }
 
+    @Transactional
+    public List<MateriaDto> listAllMateria(){
+        List<Materia> list = repository.findByActive(true);
+        return list.stream().map(mapper::materiaToMateriaDto).collect(Collectors.toList());
+
+    }
+
 
     @Transactional
     public MateriaDto create(MateriaDto dto){
@@ -52,7 +62,7 @@ public class MateriaService {
         entity.setName(dto.getName());
         entity.setActive(true);
         entity = repository.save(entity);
-        return new MateriaDto(entity);
+        return mapper.materiaToMateriaDto(entity);
     }
 
     @Transactional
@@ -61,7 +71,7 @@ public class MateriaService {
             Materia entity = repository.getOne(id);
             entity.setName(dto.getName());
             entity = repository.save(entity);
-            return new MateriaDto(entity);
+            return mapper.materiaToMateriaDto(entity);
         }catch(EntityNotFoundException e){
             throw new ResourceNotFoundException("Entity not Found");
         }

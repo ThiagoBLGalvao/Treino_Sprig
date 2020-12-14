@@ -14,10 +14,6 @@ public class MateriaDto implements Serializable {
     public MateriaDto() {
     }
 
-    public MateriaDto(String name) {
-        this.name = name;
-    }
-
     public MateriaDto(Materia entity){
         this.id = entity.getId();
         this.name = entity.getName();

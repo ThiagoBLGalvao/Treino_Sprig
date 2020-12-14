@@ -6,14 +6,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
 public interface AlunoRepository extends JpaRepository<Aluno, Long>{
-    @Query(value = "SELECT * FROM tb_aluno tba WHERE tba.active = true",
-    nativeQuery = true)
-    List<Aluno> findAllActive();
-
     @Query(value = "SELECT * FROM tb_aluno tba WHERE tba.active = true AND tba.mentor_id = ?1",
     nativeQuery = true)
     List<Aluno> findAllActiveAlunosByMentorId(Long mentor_id);
@@ -26,11 +23,11 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long>{
             nativeQuery = true)
     List<Aluno> findAllActiveAlunosByProgramaId(Long programa_id);
 
-    @Query(value = "SELECT * FROM tb_aluno tba WHERE tba.active = true AND tba.id = ?1",
-            nativeQuery = true)
-    Aluno findOneActiveAlunosById(Long id);
-
     @Query(value = "SELECT * FROM tb_aluno tba WHERE tba.id = ?1 AND tba.active = true AND tba.mentor_id = ?2",
     nativeQuery = true)
     Aluno verifyRelation(Long aluno_id, Long mentor_id);
+
+    List<Aluno> findByActive(boolean active);
+
+    Optional<Aluno> findByActiveAndId(boolean active, Long id);
 }

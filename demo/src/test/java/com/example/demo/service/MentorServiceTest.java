@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.MentorDto;
+import com.example.demo.fixtures.MentorFixture;
+import com.example.demo.mappers.MentorMentorDtoMapper;
 import com.example.demo.model.Mentor;
 import com.example.demo.repository.AlunoRepository;
 import com.example.demo.repository.MentorRepository;
@@ -8,14 +10,18 @@ import com.example.demo.services.MentorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MentorServiceTest {
@@ -29,36 +35,53 @@ public class MentorServiceTest {
     @Mock
     private AlunoRepository alunoRepository;
 
+    @Spy
+    private MentorMentorDtoMapper mapper = Mappers.getMapper(MentorMentorDtoMapper.class);
+
     @Test
-    public void ListAllMentorTest(){
+    public void pageAllMentorTest(){
 
-        Mockito.when(repository.findAllActive()).thenReturn(List.of(
-                new Mentor("Jobin"),
-                new Mentor("Jonathan")
-        ));
+        List<Mentor> mentorList = List.of(
+                MentorFixture.buildMentorDefault(),
+                MentorFixture.buildMentorDefault()
+        );
 
-        List<MentorDto> dto = service.listAll();
+        Integer page = 0 ;
+        Integer linsPerPage= 5;
+        String orderBy ="name";
+        String direction = "ASC";
+
+        Pageable pageable = PageRequest.of(page,linsPerPage, Sort.Direction.valueOf(direction),orderBy);
+
+        PageRequest pageRequest = PageRequest.of(page,linsPerPage, Sort.Direction.valueOf(direction),orderBy);
+
+        Page<Mentor> mentorTest = new PageImpl<>(mentorList, pageable, 1);
+
+        when(repository.findByActive(true,pageRequest)).thenReturn(mentorTest);
+
+        Page<MentorDto> pageMentorDto = service.findAllPaged(pageRequest);
+
         Assertions.assertAll(
-                ()->Assertions.assertEquals("Jonathan",dto.get(1).getName()),
-                ()->Assertions.assertEquals("Jobin", dto.get(0).getName())
+                ()->Assertions.assertEquals("Jonathan", pageMentorDto.getContent().get(1).getName()),
+                ()->Assertions.assertEquals(2, pageMentorDto.getContent().size())
         );
     }
 
     @Test
     public void listByIdTest(){
 
-        Mockito.when(repository.findById(1L)).thenReturn(java.util.Optional.of(new Mentor("Joseph")));
+        when(repository.findById(1L)).thenReturn(java.util.Optional.of(MentorFixture.buildMentorDefault()));
 
         MentorDto dto = service.listMentorDtoById(1L);
 
-        Assertions.assertEquals("Joseph",dto.getName());
+        Assertions.assertEquals("Jonathan",dto.getName());
     }
 
     @Test
     public void createMentorTest(){
-        Mentor entity = new Mentor("Jonathan");
+        Mentor entity = MentorFixture.buildMentorDefault();
 
-        Mockito.when(repository.save(any())).thenReturn(entity);
+        when(repository.save(any())).thenReturn(entity);
 
         MentorDto testDto = new MentorDto(entity);
 
@@ -69,30 +92,27 @@ public class MentorServiceTest {
 
     @Test
     public void updateTest(){
-        Mentor entity = new Mentor("Jonathan");
 
-        Mockito.when(repository.getOne(1L)).thenReturn(entity);
+        when(repository.getOne(1L)).thenReturn(MentorFixture.buildMentorDefault());
 
-        MentorDto testDto = new MentorDto();
-        testDto.setName("Jonny");
+        MentorDto testDto = new MentorDto(MentorFixture.buildMentorToUpdate());
 
-        Mockito.when(repository.save(entity)).thenReturn(new Mentor(testDto.getName()));
+        when(repository.save(any())).thenReturn(new Mentor(1L, testDto.getName(), true));
 
         MentorDto dto = service.update(1L,testDto);
 
-        Assertions.assertEquals("Jonny",dto.getName());
+        Assertions.assertEquals("Jobin",dto.getName());
     }
 
     @Test
     public void deleteMentorTest(){
-        Mentor entity = new Mentor("Jonathan");
-        entity.setActive(true);
+        Mentor entity = MentorFixture.buildMentorDefault();
 
-        Mockito.when(repository.getOne(1L)).thenReturn(entity);
+        when(repository.getOne(1L)).thenReturn(entity);
 
-        Mockito.when(repository.save(entity)).thenReturn(new Mentor("Jonathan",false));
+        when(repository.save(entity)).thenReturn(new Mentor(1L,"Jonathan",false));
 
-        Mockito.when(alunoRepository.findAllActiveAlunosByMentorId(1L)).thenReturn(List.of());
+        when(alunoRepository.findAllActiveAlunosByMentorId(1L)).thenReturn(List.of());
 
         service.deleteById(1L);
 

@@ -1,15 +1,21 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ProgramaDto;
+import com.example.demo.fixtures.ProgramaDtoFixture;
+import com.example.demo.fixtures.ProgramaFixture;
+import com.example.demo.mappers.ProgramaMapper;
 import com.example.demo.model.Programa;
 import com.example.demo.repository.AlunoRepository;
 import com.example.demo.repository.ProgramaRepository;
 import com.example.demo.services.ProgramaService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 
 import java.util.List;
 
@@ -29,76 +35,81 @@ public class ProgramaServiceTest {
     @Mock
     AlunoRepository alunoRepository;
 
+    @Spy
+    ProgramaMapper mapper = Mappers.getMapper(ProgramaMapper.class);
+
     @Test
-    public void listAllProgramaTest(){
+    public void pageAllProgramaTest(){
+        List<Programa> listPrograma = List.of(
+                ProgramaFixture.buildProgramaDefault(),
+                ProgramaFixture.buildProgramaDefault()
+        );
 
-        when(repository.findAllActive()).thenReturn(List.of(
-                new Programa("Stone Mask Geology"),
-                new Programa("Stand Story")
-        ));
+        Integer page = 0 ;
+        Integer linsPerPage= 5;
+        String orderBy ="name";
+        String direction = "ASC";
 
-        List<ProgramaDto> list = service.lisAll();
+        Pageable pageable = PageRequest.of(page,linsPerPage, Sort.Direction.valueOf(direction),orderBy);
+
+        PageRequest pageRequest = PageRequest.of(page,linsPerPage, Sort.Direction.valueOf(direction),orderBy);
+
+        Page<Programa> pageTest = new PageImpl<>(listPrograma, pageable, 1);
+
+        when(repository.findByActive(true, pageRequest)).thenReturn(pageTest);
+
+        Page<ProgramaDto> pageDto = service.findAllPaged(pageRequest);
 
         assertAll(
-                ()-> assertEquals("Stand Story", list.get(1).getName()),
-                ()-> assertEquals(2, list.size()),
-                ()-> assertFalse(list.isEmpty()),
-                ()-> assertEquals("Stone Mask Geology", list.get(0).getName())
+                ()-> assertEquals(2, pageDto.getContent().size()),
+                ()-> assertFalse(pageDto.getContent().isEmpty()),
+                ()-> assertEquals("Stone Mask Geology", pageDto.getContent().get(0).getName())
         );
     }
 
     @Test
     public void listByIdTest(){
-        Programa entity = new Programa("Stone Mask");
+        Programa entity = ProgramaFixture.buildProgramaDefault();
 
         when(repository.findById(1L)).thenReturn(java.util.Optional.of(entity));
 
         ProgramaDto dtoTest = service.listProgramaDtoById(1L);
 
-        assertEquals("Stone Mask", dtoTest.getName());
+        assertEquals("Stone Mask Geology", dtoTest.getName());
     }
 
     @Test
     public void createProgramaTest(){
-        Programa entity = new Programa("Stone Mask");
+        Programa entity = ProgramaFixture.buildProgramaDefault();
 
-        ProgramaDto createDtoTest = new ProgramaDto();
-        createDtoTest.setName("Stone Mask");
+        ProgramaDto createDtoTest = ProgramaDtoFixture.buildProgramaDtoDefault();
 
         when(repository.save(any())).thenReturn(entity);
 
         ProgramaDto dtoTest = service.create(createDtoTest);
 
-        assertEquals("Stone Mask", dtoTest.getName());
+        assertEquals("Stone Mask Geology", dtoTest.getName());
     }
 
     @Test
     public void updateProgramaTes(){
-        Programa entity = new Programa("Stone Mask");
+        Programa entity = ProgramaFixture.buildProgramaDefault();
 
 
         when(repository.getOne(1L)).thenReturn(entity);
 
+        ProgramaDto updateDtoTest = new ProgramaDto(ProgramaFixture.buildProgramaToUpdate());
 
-        ProgramaDto updateDtoTest = new ProgramaDto();
-        updateDtoTest.setName("Hamon Bootcamp");
-
-        Programa updatedEntity = new Programa(updateDtoTest.getName());
-
-        when(repository.save(any())).thenReturn(updatedEntity);
+        when(repository.save(any())).thenReturn(ProgramaFixture.buildProgramaToUpdate());
 
         ProgramaDto dtoTest = service.update(1L, updateDtoTest);
 
-        assertEquals("Hamon Bootcamp", dtoTest.getName());
+        assertEquals("History of Stone Man", dtoTest.getName());
     }
 
     @Test
     public void deleteProgramaTest(){
-        Programa entity = new Programa("Hamon Bootcamp");
-        entity.setActive(true);
-
-        Programa deletedEntity = new Programa(entity.getName());
-        deletedEntity.setActive(false);
+        Programa entity = ProgramaFixture.buildProgramaDefault();
 
         when(repository.getOne(1L)).thenReturn(entity);
 
@@ -106,6 +117,6 @@ public class ProgramaServiceTest {
 
         service.deleteById(1L);
 
-        assertFalse(deletedEntity.getActive());
+        assertFalse(entity.getActive());
     }
 }

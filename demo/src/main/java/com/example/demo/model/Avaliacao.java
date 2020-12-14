@@ -32,6 +32,14 @@ public class Avaliacao implements Serializable {
     public Avaliacao() {
     }
 
+    public Avaliacao(Double nota, Month mes, Mentor mentor, Aluno aluno, Materia materia){
+        this.nota = nota;
+        this.mes = mes;
+        this.mentor = mentor;
+        this.aluno = aluno;
+        this.materia = materia;
+    }
+
     public Long getId() {
         return id;
     }
