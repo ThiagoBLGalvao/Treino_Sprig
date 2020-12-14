@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { FormControl, InputLabel, makeStyles,  MenuItem, Select, TextField } from '@material-ui/core';
+import { FormControl, InputLabel, makeStyles, MenuItem, Select, TextField } from '@material-ui/core';
 import Form from '../../Form';
 
 import api from '../../../services/api';
 
 import "./styles.css";
+import ContentForm from '../../ContentForm';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -70,15 +71,15 @@ export default function FormAluno({ alunoUpdate, backToUpdate }) {
             .then(backToUpdate({}, 2));
     }
 
-    function getButtonText(){
+    function getButtonText() {
         return Object.keys(alunoUpdate).length > 1 ? "Update" : "Create";
     }
 
     return (
-        <div className="contentForm">
+        <ContentForm>
             <Form
-                handleSubmit = { handleSubmit }
-                action = {getButtonText()}
+                handleSubmit={handleSubmit}
+                action={getButtonText()}
             >
                 <TextField
                     id="name"
@@ -93,7 +94,7 @@ export default function FormAluno({ alunoUpdate, backToUpdate }) {
                 <TextField
                     id="classMate"
                     name="classMate"
-                    label="classMate"
+                    label="Classmate"
                     variant="outlined"
                     fullWidth
                     margin="normal"
@@ -130,6 +131,6 @@ export default function FormAluno({ alunoUpdate, backToUpdate }) {
                     </FormControl>
                 </div>
             </Form>
-        </div>
+        </ContentForm>
     );
 }

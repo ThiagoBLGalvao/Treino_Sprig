@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {  FormControl, InputLabel, makeStyles, MenuItem, Select, TextField } from '@material-ui/core';
+import { FormControl, InputLabel, makeStyles, MenuItem, Select, TextField } from '@material-ui/core';
 import Form from '../../Form';
 
 import api from '../../../services/api';
@@ -7,6 +7,7 @@ import api from '../../../services/api';
 import "./styles.css";
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import ContentForm from '../../ContentForm';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -86,7 +87,7 @@ export default function FormAluno({ avaliacaoUpdate, backToUpdate }) {
     }
 
     return (
-        <div className="contentForm">
+        <ContentForm>
             <Form
                 handleSubmit={handleSubmit}
                 action={getButtonText()}
@@ -146,17 +147,17 @@ export default function FormAluno({ avaliacaoUpdate, backToUpdate }) {
                     <div className="dataCollectorContainer">
                         <DatePicker
                             label="Mês"
-                            views = {["month"]}
-                            format = "MMMM"
+                            views={["month"]}
+                            format="MMMM"
                             inputVariant="outlined"
                             value={mesDataType}
-                            ToolbarComponent={()=> null}
-                            openTo = "month"
+                            ToolbarComponent={() => null}
+                            openTo="month"
                             onChange={setMesDataType}
                         />
                     </div>
                 </MuiPickersUtilsProvider>
             </Form>
-        </div>
+        </ContentForm>
     );
 }

@@ -30,18 +30,10 @@ public class Mentor implements Serializable {
     public Mentor() {
     }
 
-    public Mentor(String name){
+    public Mentor(Long id, String name, Boolean active){
       this.name = name;
-    }
-
-    public Mentor(String name, Boolean active){
-        this.name = name;
-        this.active = active;
-    }
-
-    public Mentor(Long id,String name){
-        this.id = id;
-        this.name = name;
+      this.id = id;
+      this.active = active;
     }
 
     public Long getId() {

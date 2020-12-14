@@ -34,14 +34,8 @@ public class Aluno implements Serializable {
     public Aluno() {
     }
 
-    public Aluno(String name, String classMate, Mentor mentor, Programa programa) {
-        this.name = name;
-        this.classMate = classMate;
-        this.mentor = mentor;
-        this.programa = programa;
-    }
-
-    public Aluno(String name, String classMate, Mentor mentor, Programa programa, Boolean active) {
+    public Aluno(Long id, String name, String classMate, Mentor mentor, Programa programa, Boolean active) {
+        this.id = id;
         this.name = name;
         this.classMate = classMate;
         this.mentor = mentor;

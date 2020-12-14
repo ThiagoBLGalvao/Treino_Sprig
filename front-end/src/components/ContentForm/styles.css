@@ -1,0 +1,12 @@
+.formContent{
+    margin-top: 2rem;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    background:#035aa6;
+    border-radius: 10px;
+    height: fit-content;
+    padding: 0.5rem;
+}

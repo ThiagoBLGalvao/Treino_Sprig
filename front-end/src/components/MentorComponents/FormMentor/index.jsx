@@ -2,6 +2,7 @@ import { TextField } from '@material-ui/core';
 import React, { useState } from 'react';
 
 import api from '../../../services/api';
+import ContentForm from '../../ContentForm';
 import Form from '../../Form';
 
 import "./styles.css";
@@ -44,7 +45,7 @@ export default function FormMentor({ mentorUpdate, backToUpdate }) {
     }
 
     return (
-        <div className="contentForm">
+        <ContentForm>
             <Form
                 handleSubmit={handleSubmit}
                 action={getButtonText()}
@@ -60,6 +61,6 @@ export default function FormMentor({ mentorUpdate, backToUpdate }) {
                     onChange={e => setName(e.target.value)}
                 />
             </Form>
-        </div>
+        </ContentForm>
     );
 }

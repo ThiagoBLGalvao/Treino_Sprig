@@ -7,6 +7,7 @@ import api from '../../../services/api';
 
 import "./styles.css";
 import Form from '../../Form';
+import ContentForm from '../../ContentForm';
 
 
 export default function FormPrograma({ programaUpdate, backToUpdate }) {
@@ -52,15 +53,16 @@ export default function FormPrograma({ programaUpdate, backToUpdate }) {
             .then(backToUpdate({}, 2));
     }
 
-    function getButtonText(){
+    function getButtonText() {
         return Object.keys(programaUpdate).length > 1 ? "Update" : "Create"
     }
 
     return (
-        <div className="contentForm">
+        <ContentForm>
+
             <Form
-                handleSubmit = {handleSubmit}
-                action = {getButtonText()}
+                handleSubmit={handleSubmit}
+                action={getButtonText()}
             >
                 <TextField
                     id="name"
@@ -89,6 +91,6 @@ export default function FormPrograma({ programaUpdate, backToUpdate }) {
                     </div>
                 </MuiPickersUtilsProvider>
             </Form>
-        </div>
+        </ContentForm>
     );
 }

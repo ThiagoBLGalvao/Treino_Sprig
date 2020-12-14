@@ -4,7 +4,7 @@ import Form from '../../Form';
 
 import api from '../../../services/api';
 
-import "./styles.css";
+import ContentForm from '../../ContentForm';
 
 
 export default function FormMateria({ materiaUpdate, backToUpdate }) {
@@ -44,7 +44,7 @@ export default function FormMateria({ materiaUpdate, backToUpdate }) {
     }
 
     return (
-        <div className="contentForm">
+        <ContentForm>
             <Form
                 handleSubmit={handleSubmit}
                 action={getButtonText()}
@@ -60,6 +60,7 @@ export default function FormMateria({ materiaUpdate, backToUpdate }) {
                     onChange={e => setName(e.target.value)}
                 />
             </Form>
-        </div>
+        </ContentForm>
+        
     );
 }

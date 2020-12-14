@@ -23,8 +23,10 @@ public class Materia implements Serializable {
     public Materia() {
     }
 
-    public Materia(String name) {
+    public Materia(Long id, String name, Boolean active) {
+        this.id = id;
         this.name = name;
+        this.active = active;
     }
 
     public Long getId() {

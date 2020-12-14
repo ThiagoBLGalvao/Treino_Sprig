@@ -15,9 +15,9 @@
     align-items: center;
     flex-flow: column;
     flex-wrap: wrap;
-    width: 70%;
+    width: 45%;
     padding: 20px;
-    background: rgb(82, 82, 82);
+    background: #035aa6;
     border-radius: 10px;
 }
 .MainMenuContainer .content li{

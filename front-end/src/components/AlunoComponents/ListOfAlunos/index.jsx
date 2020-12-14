@@ -1,9 +1,27 @@
-import { Button, makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { Button, makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, withStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import api from '../../../services/api';
+import TableList from '../../TableList';
 
 import "./styles.css";
 
+const StyledTableCell = withStyles((theme) => ({
+    head: {
+        backgroundColor: "#035aa6",
+        color: theme.palette.common.white,
+    },
+    body: {
+        fontSize: 14,
+    },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+    root: {
+
+        backgroundColor: "#035aa6",
+
+    },
+}))(TableRow);
 
 const useStyles = makeStyles({
     table: {
@@ -12,7 +30,7 @@ const useStyles = makeStyles({
 });
 
 
-export default function ListOfMentors({backToUpdate}) {
+export default function ListOfMentors({ backToUpdate }) {
     const [AlunoResponse, setAlunoResponse] = useState([]);
     const [actualPage, setActualPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
@@ -29,49 +47,51 @@ export default function ListOfMentors({backToUpdate}) {
 
     }, [actualPage]);
 
-    async function handleDelete(id){
+    async function handleDelete(id) {
         api.delete(`aluno/${id}`)
-        .then(setAlunoResponse(AlunoResponse.filter((element)=> element.id !== id)));
+            .then(setAlunoResponse(AlunoResponse.filter((element) => element.id !== id)));
     }
 
 
     return (
-        <TableContainer component={Paper}>
-            <Table className={classes.table}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell align="center">
-                            Name
-                        </TableCell>
-                        <TableCell align="right">
-                            Actions
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {AlunoResponse.map(response =>(
-                        <TableRow key={response.id}>
-                            <TableCell align="center">
-                                {response.name}
-                            </TableCell>
-                            <TableCell align="center">
-                                <Button onClick = {()=> backToUpdate(response, 0)}>Alter</Button>
-                            </TableCell>
-                            <TableCell align="center">
-                                <Button onClick = {() => handleDelete(response.id)}>X</Button>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            <div className = "paginationButtons">
-                <Button disabled = {actualPage === 0} onClick={() => setActualPage(actualPage - 1)}>
-                    {"<"}
-                </Button>
-                <Button disabled = {actualPage === totalPages -1} onClick={() => setActualPage(actualPage + 1)}>
-                    {">"}
-                </Button>
-            </div>
-        </TableContainer>
+        <TableList>
+
+            <TableContainer component={Paper}>
+                <Table className={classes.table}>
+                    <TableHead>
+                        <StyledTableRow>
+                            <StyledTableCell align="center">
+                                Name
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
+                                Actions
+                            </StyledTableCell>
+                        </StyledTableRow>
+                    </TableHead>
+                    <TableBody>
+                        {AlunoResponse.map(response => (
+                            <StyledTableRow key={response.id}>
+                                <StyledTableCell align="center">
+                                    {response.name}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                    <Button onClick={() => backToUpdate(response, 0)}>Alter</Button>
+
+                                    <Button onClick={() => handleDelete(response.id)}>X</Button>
+                                </StyledTableCell>
+                            </StyledTableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <div className="paginationButtons">
+                    <Button disabled={actualPage === 0} onClick={() => setActualPage(actualPage - 1)}>
+                        {"<"}
+                    </Button>
+                    <Button disabled={actualPage === totalPages - 1} onClick={() => setActualPage(actualPage + 1)}>
+                        {">"}
+                    </Button>
+                </div>
+            </TableContainer>
+        </TableList>
     );
 }

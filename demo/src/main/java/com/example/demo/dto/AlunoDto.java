@@ -23,22 +23,12 @@ public class AlunoDto implements Serializable {
 
     }
 
-    public AlunoDto(String name, String classMate){
-        this.name = name;
-        this.classMate = classMate;
-    }
-
     public AlunoDto(Aluno entity){
         this.id = entity.getId();
         this.name = entity.getName();
         this.classMate = entity.getClassMate();
         this.mentor_id = entity.getMentor().getId();
         this.programa_id = entity.getPrograma().getId();
-    }
-
-    public AlunoDto(Aluno entity, Set<Avaliacao> avalicoes){
-        this(entity);
-        avalicoes.forEach(x -> this.avaliacaoDtoList.add(new AvaliacaoDto(x)));
     }
 
     public Long getId() {

@@ -15,8 +15,9 @@ public class AvaliacaoDto implements Serializable {
     private Long mentor_id;
     private Long aluno_id;
     private Long materia_id;
-    private MateriaDto materiaDto;
-    private AlunoDto alunoDto;
+    private String aluno_name;
+    private String materia_name;
+
 
     public AvaliacaoDto() {
     }
@@ -28,6 +29,8 @@ public class AvaliacaoDto implements Serializable {
         this.aluno_id = entity.getAluno().getId();
         this.mentor_id = entity.getMentor().getId();
         this.materia_id = entity.getMateria().getId();
+        this.aluno_name = entity.getAluno().getName();
+        this.materia_name = entity.getMateria().getName();
     }
 
     public Long getId() {
@@ -78,20 +81,20 @@ public class AvaliacaoDto implements Serializable {
         this.materia_id = materia_id;
     }
 
-    public MateriaDto getMateriaDto() {
-        return materiaDto;
+    public String getAluno_name() {
+        return aluno_name;
     }
 
-    public void setMateriaDto(MateriaDto materiaDto) {
-        this.materiaDto = materiaDto;
+    public void setAluno_name(String aluno_name) {
+        this.aluno_name = aluno_name;
     }
 
-    public AlunoDto getAlunoDto() {
-        return alunoDto;
+    public String getMateria_name() {
+        return materia_name;
     }
 
-    public void setAlunoDto(AlunoDto alunoDto) {
-        this.alunoDto = alunoDto;
+    public void setMateria_name(String materia_name) {
+        this.materia_name = materia_name;
     }
 
     @Override
